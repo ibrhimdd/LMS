@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="text-align: center; margin-top: 50px;">
+    <h2>رفع ملف بيانات الطلاب (PDF)</h2>
+    <p>تأكد أن الملف يحتوي على: اسم_المستخدم كلمة_المرور في كل سطر</p>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="pdf_file" accept=".pdf" required>
+        <br><br>
+        <button type="submit" style="padding: 10px 20px; cursor: pointer;">بدء استخراج الحسابات</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}منصة د. محمد خيري{% endblock %}</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --danger-color: #e74c3c;
+            --text-light: #ecf0f1;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+
+        /* شريط التنقل */
+        .navbar {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 10000;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* القائمة للكمبيوتر */
+        .nav-links {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+            align-items: center;
+        }
+
+        .nav-links li {
+            margin-right: 15px;
+        }
+
+        .nav-links a {
+            color: #bdc3c7;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 15px;
+            padding: 8px 12px;
+            transition: 0.3s;
+            border-radius: 5px;
+        }
+
+        .nav-links a:hover {
+            color: white;
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        /* زر القائمة للهاتف */
+        .menu-toggle {
+            display: none;
+            font-size: 26px;
+            cursor: pointer;
+            color: white;
+        }
+
+        /* زر الخروج */
+        .logout-btn {
+            background-color: var(--danger-color) !important;
+            color: white !important;
+            padding: 6px 15px !important;
+        }
+
+        /* تنسيقات الهاتف (Responsive) */
+        @media (max-width: 992px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                display: flex;
+                flex-direction: column;
+                position: fixed;
+                top: 0;
+                right: -100%; /* مخفية لليمين */
+                width: 280px;
+                height: 100vh;
+                background-color: var(--primary-color);
+                padding-top: 60px;
+                transition: 0.4s ease-in-out;
+                box-shadow: -5px 0 15px rgba(0,0,0,0.3);
+            }
+
+            .nav-links.active {
+                right: 0; /* تظهر عند الضغط */
+            }
+
+            .nav-links li {
+                width: 100%;
+                margin: 0;
+                border-bottom: 1px solid rgba(255,255,255,0.05);
+            }
+
+            .nav-links a {
+                display: block;
+                padding: 15px 25px;
+                font-size: 17px;
+                color: white;
+            }
+
+            /* طبقة تظليل خلفية عند فتح القائمة */
+            .overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.5);
+                z-index: 9999;
+            }
+            .overlay.active { display: block; }
+        }
+
+        .main-container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 20px auto;
+            min-height: 80vh;
+        }
+
+        footer {
+            background-color: var(--primary-color);
+            color: #bdc3c7;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 50px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="overlay" id="overlay"></div>
+
+    <nav class="navbar">
+        <a href="/" class="logo">
+            <i class="fas fa-graduation-cap"></i> LMS خيري
+        </a>
+
+        <div class="menu-toggle" id="mobile-menu">
+            <i class="fas fa-bars"></i>
+        </div>
+
+        <ul class="nav-links" id="nav-list">
+            {% if session['loggedin'] %}
+                {% if session['role'] == 'teacher' %}
+                    <li><a href="{{ url_for('teacher_dashboard') }}"><i class="fas fa-tachometer-alt"></i> لوحة التحكم</a></li>
+                    <li><a href="{{ url_for('manage_content') }}"><i class="fas fa-folder-open"></i> إدارة الدروس</a></li>
+                    <li><a href="/teacher/create_quiz"><i class="fas fa-pen-fancy"></i> إنشاء اختبار</a></li>
+                    <li><a href="{{ url_for('view_students') }}"><i class="fas fa-user-graduate"></i> عرض الطلاب</a></li>
+                    <li><a href="{{ url_for('add_students') }}"><i class="fas fa-user-plus"></i> إضافة طلاب</a></li>
+                    <li><a href="{{ url_for('view_results') }}"><i class="fas fa-poll"></i> النتائج</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('student_dashboard') }}"><i class="fas fa-book-reader"></i> دروسي</a></li>
+                    <li><a href="/student/quizzes"><i class="fas fa-tasks"></i> الاختبارات</a></li>
+                {% endif %}
+                <li><a href="{{ url_for('logout') }}" class="logout-btn"><i class="fas fa-sign-out-alt"></i> خروج</a></li>
+            {% else %}
+                <li><a href="{{ url_for('login') }}"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <div class="main-container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer>
+        <p>جميع الحقوق محفوظة © 2025 - منصة دكتور محمد خيري التعليمية</p>
+    </footer>
+
+    <script>
+        const menuToggle = document.getElementById('mobile-menu');
+        const navList = document.getElementById('nav-list');
+        const overlay = document.getElementById('overlay');
+        const icon = menuToggle.querySelector('i');
+
+        function toggleMenu() {
+            navList.classList.toggle('active');
+            overlay.classList.toggle('active');
+
+            // تغيير شكل الأيقونة
+            if (navList.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        }
+
+        menuToggle.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', toggleMenu);
+
+        // إغلاق القائمة عند الضغط على الروابط (للموبايل)
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                if(navList.classList.contains('active')) toggleMenu();
+            });
+        });
+    </script>
+</body>
+</html>

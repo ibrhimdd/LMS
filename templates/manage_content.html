@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}إدارة المحتوى والدروس{% endblock %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: auto; padding: 20px;">
+    <h2 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px;">📚 إدارة الدروس والمناقشات</h2>
+
+    <div style="margin-top: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); overflow: hidden;">
+        <table style="width: 100%; border-collapse: collapse; text-align: right;">
+            <thead>
+                <tr style="background: #34495e; color: white;">
+                    <th style="padding: 15px;">عنوان الدرس</th>
+                    <th style="padding: 15px;">النوع</th>
+                    <th style="padding: 15px;">تاريخ الرفع</th>
+                    <th style="padding: 15px;">المناقشات</th>
+                    <th style="padding: 15px;">الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lesson in lessons %}
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 15px; font-weight: bold;">{{ lesson.title }}</td>
+                    <td style="padding: 15px;">
+                        {% if lesson.file_type == 'video' %} 🎬 فيديو {% else %} 📄 PDF {% endif %}
+                    </td>
+                    <td style="padding: 15px; font-size: 0.9em; color: #666;">{{ lesson.created_at }}</td>
+                    <td style="padding: 15px;">
+                        <span style="background: #e74c3c; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.8em;">
+                            {{ lesson.discussion_count }} تعليق
+                        </span>
+                    </td>
+                    <td style="padding: 15px;">
+                        <a href="/lesson/{{ lesson.id }}/forum" style="color: #3498db; text-decoration: none; font-weight: bold;">💬 دخول المناقشة</a>
+                        |
+                        <a href="{{ url_for('static', filename='uploads/' + lesson.file_path) }}" target="_blank" style="color: #27ae60; text-decoration: none;">👁️ عرض الملف</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" style="padding: 30px; text-align: center; color: #7f8c8d;">لم تقم برفع أي دروس بعد.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

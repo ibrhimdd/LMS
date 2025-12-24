@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="max-width: 900px; margin: auto; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    <h1 style="text-align: center; color: #333;">مرحباً بك في لوحة التعلم 👋</h1>
+
+    <section>
+        <h3 style="border-right: 5px solid #28a745; padding-right: 10px; color: #28a745;">📢 آخر الأخبار والتعليمات</h3>
+        {% for note in announcements %}
+        <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #ffeeba;">
+            <p style="margin: 0; font-weight: bold;">{{ note.content }}</p>
+            <small style="color: #856404;">تم النشر في: {{ note.created_at }}</small>
+        </div>
+        {% endfor %}
+    </section>
+
+    <hr style="margin: 40px 0;">
+
+    <section>
+        <h3 style="border-right: 5px solid #007bff; padding-right: 10px; color: #007bff;">📚 الدروس المتاحة</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
+            {% for lesson in lessons %}
+            <div style="background: white; border: 1px solid #ddd; border-radius: 12px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <h4>{{ lesson.title }}</h4>
+
+                    {% if lesson.file_type == 'video' %}
+                        <p>🎬 <b>نوع المحتوى:</b> فيديو تعليمي</p>
+                        <video width="100%" controls style="border-radius: 8px;">
+                            <source src="{{ url_for('static', filename='uploads/' + lesson.file_path) }}" type="video/mp4">
+                            متصفحك لا يدعم تشغيل الفيديو.
+                        </video>
+                    {% else %}
+                        <p>📄 <b>نوع المحتوى:</b> ملف PDF</p>
+                        <a href="{{ url_for('static', filename='uploads/' + lesson.file_path) }}" target="_blank"
+                           style="display: block; text-align: center; background: #dc3545; color: white; padding: 10px; border-radius: 5px; text-decoration: none;">
+                            فتح ملف الـ PDF
+                        </a>
+                    {% endif %}
+                </div>
+
+                <div style="margin-top: 15px;">
+                    <a href="/lesson/{{ lesson.id }}/forum" style="display: block; text-align: center; margin-bottom: 8px; color: #007bff; font-size: 0.9em; text-decoration: none; border: 1px solid #007bff; padding: 5px; border-radius: 5px;">💬 اسأل الدكتور عن الدرس</a>
+
+                    {% if lesson.quiz_id %}
+                    <a href="/quiz/{{ lesson.quiz_id }}" style="display: block; text-align: center; background: #ffc107; color: #212529; padding: 10px; border-radius: 5px; text-decoration: none; font-weight: bold; border: 1px solid #e0a800;">
+                        ✍️ ابدأ الاختبار التقيمي
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

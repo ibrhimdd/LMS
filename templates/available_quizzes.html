@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="max-width: 900px; margin: auto; padding: 20px;">
+    <h2 style="text-align: center; color: #2c3e50; margin-bottom: 30px;">📝 الاختبارات المتاحة</h2>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
+        {% for quiz in quizzes %}
+        <div style="background: white; border-radius: 10px; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-top: 5px solid #3498db;">
+            <h3 style="margin-top: 0;">{{ quiz.title }}</h3>
+            <p style="color: #7f8c8d; font-size: 0.9em;">تاريخ النشر: {{ quiz.created_at.strftime('%Y-%m-%d') }}</p>
+            <a href="/quiz/{{ quiz.id }}" style="display: block; text-align: center; background: #3498db; color: white; padding: 10px; border-radius: 5px; text-decoration: none; font-weight: bold;">دخول الاختبار</a>
+        </div>
+        {% else %}
+        <p style="text-align: center; grid-column: 1 / -1;">لا توجد اختبارات مضافة حالياً.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

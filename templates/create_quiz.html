@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="max-width: 800px; margin: auto; padding: 20px;">
+    <h2>إنشاء اختبار جديد 📝</h2>
+    <form method="POST">
+        <input type="text" name="quiz_title" placeholder="عنوان الاختبار (مثلاً: اختبار شهر أكتوبر)" required style="width: 100%; padding: 10px; margin-bottom: 20px;">
+
+        <div id="questions_container">
+            </div>
+
+        <button type="button" onclick="addMCQ()" style="background: #007bff; color: white; padding: 10px;">+ إضافة سؤال اختيار من متعدد</button>
+        <button type="button" onclick="addTF()" style="background: #17a2b8; color: white; padding: 10px;">+ إضافة سؤال صح وخطأ</button>
+
+        <hr>
+        <button type="submit" style="background: #28a745; color: white; padding: 15px 30px; width: 100%;">حفظ الاختبار نهائياً</button>
+    </form>
+</div>
+
+<script>
+    let qCount = 0;
+    function addMCQ() {
+        const container = document.getElementById('questions_container');
+        const html = `
+            <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 8px;">
+                <input type="text" name="q_text[]" placeholder="نص السؤال" required style="width: 100%;">
+                <br>
+                A: <input type="text" name="opt_a[]" required> | B: <input type="text" name="opt_b[]" required><br>
+                C: <input type="text" name="opt_c[]" required> | D: <input type="text" name="opt_d[]" required><br>
+                الخيار الصحيح: <select name="correct[]"><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select>
+            </div>`;
+        container.insertAdjacentHTML('beforeend', html);
+    }
+
+    function addTF() {
+        const container = document.getElementById('questions_container');
+        const html = `
+            <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 8px; background: #f0f8ff;">
+                <input type="text" name="q_text[]" placeholder="سؤال صح أم خطأ؟" required style="width: 100%;">
+                <input type="hidden" name="opt_a[]" value="صح">
+                <input type="hidden" name="opt_b[]" value="خطأ">
+                <input type="hidden" name="opt_c[]" value="">
+                <input type="hidden" name="opt_d[]" value="">
+                الإجابة الصحيحة: <select name="correct[]"><option value="A">صح</option><option value="B">خطأ</option></select>
+            </div>`;
+        container.insertAdjacentHTML('beforeend', html);
+    }
+</script>
+{% endblock %}

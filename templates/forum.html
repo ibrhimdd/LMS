@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="max-width: 700px; margin: auto; padding: 20px;">
+    <h2 style="text-align: center; color: #333;">💬 مناقشة درس: {{ lesson.title }}</h2>
+    <hr>
+
+    <div style="background: #f9f9f9; padding: 15px; border-radius: 10px; height: 400px; overflow-y: auto; border: 1px solid #ddd; margin-bottom: 20px;">
+        {% for post in posts %}
+            <div style="margin-bottom: 15px; padding: 10px; border-radius: 8px;
+                        background: {{ '#e3f2fd' if post.role == 'teacher' else '#ffffff' }};
+                        border-right: 4px solid {{ '#007bff' if post.role == 'teacher' else '#ccc' }};">
+                <strong style="color: #333;">{{ post.username }} {% if post.role == 'teacher' %}(المعلم) {% endif %}</strong>
+                <small style="float: left; color: #888;">{{ post.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                <p style="margin: 5px 0 0 0; line-height: 1.5;">{{ post.message }}</p>
+            </div>
+        {% else %}
+            <p style="text-align: center; color: #888;">لا توجد نقاشات بعد. كن أول من يسأل!</p>
+        {% endfor %}
+    </div>
+
+    <div style="background: white; padding: 15px; border: 1px solid #ddd; border-radius: 10px;">
+        <form method="POST">
+            <textarea name="message" placeholder="اكتب سؤالك أو تعليقك هنا..."
+                      style="width: 100%; height: 70px; padding: 10px; border-radius: 5px; border: 1px solid #ccc; resize: none;" required></textarea>
+            <br><br>
+            <button type="submit" style="width: 100%; background: #28a745; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                إرسال التعليق
+            </button>
+        </form>
+    </div>
+
+    <p style="text-align: center; margin-top: 20px;">
+        <a href="/student/dashboard" style="text-decoration: none; color: #007bff;">← العودة للدروس</a>
+    </p>
+</div>
+{% endblock %}

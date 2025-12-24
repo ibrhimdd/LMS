@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="max-width: 800px; margin: auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+    <h2 style="text-align: center; color: #333;">📝 اختبار: {{ quiz.title }}</h2>
+    <hr>
+    <form method="POST">
+        {% for q in questions %}
+        <div style="margin-bottom: 30px; padding: 15px; border-bottom: 1px solid #eee;">
+            <p style="font-size: 1.2em; font-weight: bold;">{{ loop.index }}. {{ q.question_text }}</p>
+
+            <label style="display: block; margin: 10px 0;">
+                <input type="radio" name="question_{{ q.id }}" value="A" required> {{ q.option_a }}
+            </label>
+            <label style="display: block; margin: 10px 0;">
+                <input type="radio" name="question_{{ q.id }}" value="B"> {{ q.option_b }}
+            </label>
+
+            {% if q.option_c %} <label style="display: block; margin: 10px 0;">
+                <input type="radio" name="question_{{ q.id }}" value="C"> {{ q.option_c }}
+            </label>
+            <label style="display: block; margin: 10px 0;">
+                <input type="radio" name="question_{{ q.id }}" value="D"> {{ q.option_d }}
+            </label>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+        <button type="submit" style="width: 100%; padding: 15px; background: #28a745; color: white; border: none; border-radius: 5px; font-size: 1.1em; cursor: pointer;">
+            تسليم الإجابات وإنهاء الاختبار
+        </button>
+    </form>
+</div>
+{% endblock %}
